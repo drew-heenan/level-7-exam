@@ -9,15 +9,7 @@ public class BestRestaurantVoteCounter {
 	}
 
 	private void getGoing() throws IOException {
-		URL fileWithVotes = getClass().getResource("sample-votes.txt");
-
-		ArrayList<String> votes = new ArrayList();
-		Scanner scanner = new Scanner(fileWithVotes.openStream());
-
-		while (scanner.hasNextLine()) {
-			votes.add(scanner.nextLine());
-		}
-		scanner.close();
+		ArrayList<String> votes = loadVotes();
 
 		int votesForSangDeuan = 0, votesForOceanaCoastalKitchen = 0, votesForWerewolf = 0, votesForHomeAndAway = 0, votesForCLevel = 0;
 		for (String vote : votes) {
@@ -36,6 +28,19 @@ public class BestRestaurantVoteCounter {
 		String winningRestaurant = calculateWinner(votesForSangDeuan, votesForOceanaCoastalKitchen, votesForWerewolf, votesForHomeAndAway, votesForCLevel);
 		System.out.println("Reader's favorite restaurant is: "  + winningRestaurant);
 		//TODO: Tweet the result.
+	}
+
+	public ArrayList<String> loadVotes() throws IOException {
+		URL fileWithVotes = getClass().getResource("sample-votes.txt");
+
+		ArrayList<String> votes = new ArrayList();
+		Scanner scanner = new Scanner(fileWithVotes.openStream());
+
+		while (scanner.hasNextLine()) {
+			votes.add(scanner.nextLine().trim()); //Here's my change (.trim()) which removes the trailing spaces while loading the votes.
+		}
+		scanner.close();
+		return votes;
 	}
 
 	private String calculateWinner(int votesForSangDeuan, int votesForOceanaCoastalKitchen, int votesForWerewolf, int votesForHomeAndAway, int votesForCLevel) {
